@@ -1,0 +1,18 @@
+<!-- templates/quizzes/category.html -->
+<h1>{{ category.name }}</h1>
+<form method="POST">
+     {% csrf_token %} 
+    {% for question in questions %}
+        <p>{{ question.text }}</p>
+        {% if question.choices %}
+            {% for choice in question.choices %}
+                <input type="checkbox" name="choice{{ forloop.counter }}" value="{{ choice }}">
+                <label>{{ choice }}</label><br>
+            {% endfor %}
+        {% else %}
+            <p>No choices available for this question.</p>
+        {% endif %}
+    {% endfor %}
+
+    <button type="submit">Submit</button>
+</form>

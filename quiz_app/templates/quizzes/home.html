@@ -1,0 +1,9 @@
+<!-- templates/quizzes/home.html -->
+
+<h1>Select a Category</h1>
+<ul>
+     {% for category in categories %} 
+        <li><a href=" {% url 'category' category.id %} ">{{category.name}}</a></li>
+       {% endfor %} 
+    
+</ul>

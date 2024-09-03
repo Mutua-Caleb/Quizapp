@@ -1,0 +1,7 @@
+<h1>Student Login</h1>
+<form action="POST">
+     {% csrf_token %} 
+     <label for="username">Username:</label>
+     <input type="text" id="username" name="username" required>
+     <button type="submit">Login</button>
+</form>
