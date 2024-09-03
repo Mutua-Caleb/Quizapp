@@ -1,15 +1,17 @@
+{% load quiz_filters %}
+
 <!-- templates/quizzes/results.html -->
 <h1>{{ category.name }} - Results</h1>
 <p>Your score: {{ score }}%</p>
 
 <ul>
-{% for question, selected in zip(questions, selected_choices) %}
+{% for question_data in zipped_data %}
     <li>
-        <p>{{ question.text }}</p>
-        <p>Your choices: {{ selected }}</p>
-        <p>Correct answers: {{ question.correct_answers }}</p>
+        <p>{{ question_data.question.text }}</p>
+        <p>Your choices: {{ question_data.selected }}</p>
+        <p>Correct answers: {{ question_data.question.correct_answers }}</p>
 
-        {% if set(selected) == set(question.correct_answers) %}
+        {% if question_data.selected|set == question_data.question.correct_answers|set %}
             <p style="color: green;">Correct</p>
         {% else %}
             <p style="color: red;">Incorrect</p>

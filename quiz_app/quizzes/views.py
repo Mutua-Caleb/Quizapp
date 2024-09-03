@@ -15,35 +15,56 @@ def student_login(request):
             return redirect('home')
     return render(request, 'quizzes/login.html')
 
+
 def category(request, category_id):
-    category = Category.objects.get(id=category_id)
+    category = get_object_or_404(Category, id=category_id)
     questions = Question.objects.filter(category=category) 
 
     if request.method == 'POST': 
-        #process the submitted answers 
-        selected_choices = [] 
+        selected_choices = {}  # Use a dictionary to map question IDs to selected choices
         correct_answers_count = 0 
-        total_question = questions.count() 
+        total_questions = questions.count()
 
-        for question in questions: 
+        for question in questions:
+            # Get the submitted choices for the current question
             submitted_choices = request.POST.getlist(f'choice{question.id}')
-            selected_choices.append(submitted_choices)
-            #Check if the student's answers match the correct answers 
-            if set(submitted_choices) == set(question.correct_answers): 
-                correct_answers_count +=1 
+            selected_choices[question.id] = submitted_choices
             
+            # Ensure correct_answers is a list
+            correct_answers = question.correct_answers
+            if isinstance(correct_answers, int):
+                correct_answers = [correct_answers]  # Convert to list if it's a single integer
 
-        # calculate score or feedback here 
-        score = correct_answers_count/total_question * 100
+            # Check if the submitted choices match the correct answers
+            if set(submitted_choices) == set(map(str, correct_answers)): 
+                correct_answers_count += 1
 
-        #You could redirect to a results page
+        # Calculate the score as a percentage
+        score = (correct_answers_count / total_questions) * 100
+
+        # Prepare zipped_data for the template
+        zipped_data = [
+            {
+                'question': question,
+                'selected': selected_choices[question.id]
+            } for question in questions
+        ]
+
+        # Render the results page
         return render(request, 'quizzes/results.html', {
             'category': category, 
             'questions': questions,
             'selected_choices': selected_choices,
             'score': score,
+            'zipped_data': zipped_data,
         })
-    # return render(request, 'quizzes/category.html', {'category': category, 'questions': questions})
+
+    # Render the category page with questions
+    return render(request, 'quizzes/category.html', {
+        'category': category, 
+        'questions': questions,
+    })
+
 
 def admin_panel(request):
     return render(request, 'quizzes/admin_panel.html')

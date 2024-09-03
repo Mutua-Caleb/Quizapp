@@ -6,7 +6,7 @@
         <p>{{ question.text }}</p>
         {% if question.choices %}
             {% for choice in question.choices %}
-                <input type="checkbox" name="choice{{ forloop.counter }}" value="{{ choice }}">
+                <input type="checkbox" name="choice{{question.id  }}" value="{{ choice }}">
                 <label>{{ choice }}</label><br>
             {% endfor %}
         {% else %}
