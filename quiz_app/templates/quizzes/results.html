@@ -1,0 +1,21 @@
+<!-- templates/quizzes/results.html -->
+<h1>{{ category.name }} - Results</h1>
+<p>Your score: {{ score }}%</p>
+
+<ul>
+{% for question, selected in zip(questions, selected_choices) %}
+    <li>
+        <p>{{ question.text }}</p>
+        <p>Your choices: {{ selected }}</p>
+        <p>Correct answers: {{ question.correct_answers }}</p>
+
+        {% if set(selected) == set(question.correct_answers) %}
+            <p style="color: green;">Correct</p>
+        {% else %}
+            <p style="color: red;">Incorrect</p>
+        {% endif %}
+    </li>
+{% endfor %}
+</ul>
+
+<a href="{% url 'quizzes:category' category.id %}">Try Again</a>

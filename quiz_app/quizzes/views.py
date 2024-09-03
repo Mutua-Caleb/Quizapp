@@ -31,10 +31,19 @@ def category(request, category_id):
             #Check if the student's answers match the correct answers 
             if set(submitted_choices) == set(question.correct_answers): 
                 correct_answers_count +=1 
+            
 
         # calculate score or feedback here 
         score = correct_answers_count/total_question * 100
-    return render(request, 'quizzes/category.html', {'category': category, 'questions': questions})
+
+        #You could redirect to a results page
+        return render(request, 'quizzes/results.html', {
+            'category': category, 
+            'questions': questions,
+            'selected_choices': selected_choices,
+            'score': score,
+        })
+    # return render(request, 'quizzes/category.html', {'category': category, 'questions': questions})
 
 def admin_panel(request):
     return render(request, 'quizzes/admin_panel.html')
